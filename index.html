@@ -125,8 +125,32 @@
     <!-- Main content -->
     <main class="main-content" id="main-content">
       <div class="home-hero">
+        <div class="home-hero__badge">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="14" rx="2"/><path d="M7 21h10M12 17v4"/></svg>
+          Guía técnica de referencia
+        </div>
         <h1 class="home-hero__title">Códigos de Contador en Equipos Multifunción</h1>
-        <p class="home-hero__subtitle">Guía técnica por marca — basada en manuales oficiales del fabricante</p>
+        <p class="home-hero__subtitle">Basada en manuales oficiales del fabricante · 12 marcas · Funciona sin conexión</p>
+      </div>
+
+      <!-- Stats -->
+      <div class="home-stats">
+        <div class="home-stats__item">
+          <span class="home-stats__number">12</span>
+          <span class="home-stats__label">Marcas</span>
+        </div>
+        <div class="home-stats__item">
+          <span class="home-stats__number">93</span>
+          <span class="home-stats__label">Modelos</span>
+        </div>
+        <div class="home-stats__item">
+          <span class="home-stats__number">4</span>
+          <span class="home-stats__label">Métodos</span>
+        </div>
+        <div class="home-stats__item">
+          <span class="home-stats__number">100%</span>
+          <span class="home-stats__label">Offline</span>
+        </div>
       </div>
 
       <!-- Global search results (hidden by default) -->
@@ -137,7 +161,7 @@
 
       <!-- Brand grid -->
       <div class="brand-grid" id="brand-grid">
-        <a href="marcas/ricoh.html" class="brand-card">
+        <a href="marcas/ricoh.html" class="brand-card" style="--brand-color:#003087">
           <div class="brand-card__logo-wrap">
             <img src="img/logos/ricoh.svg" alt="Ricoh" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
             <div class="brand-card__logo-fallback" style="display:none">RICOH</div>
@@ -145,11 +169,12 @@
           <div class="brand-card__body">
             <h2 class="brand-card__name">Ricoh / Lanier</h2>
             <p class="brand-card__aliases">Lanier · Nashuatec · Rex Rotary · NRG</p>
+            <span class="brand-card__count">15 modelos</span>
             <span class="brand-card__link">Ver guía →</span>
           </div>
         </a>
 
-        <a href="marcas/konica-minolta.html" class="brand-card">
+        <a href="marcas/konica-minolta.html" class="brand-card" style="--brand-color:#e4002b">
           <div class="brand-card__logo-wrap">
             <img src="img/logos/konica-minolta.svg" alt="Konica Minolta" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
             <div class="brand-card__logo-fallback" style="display:none">K.MINOLTA</div>
@@ -157,11 +182,12 @@
           <div class="brand-card__body">
             <h2 class="brand-card__name">Konica Minolta</h2>
             <p class="brand-card__aliases">bizhub</p>
+            <span class="brand-card__count">7 modelos</span>
             <span class="brand-card__link">Ver guía →</span>
           </div>
         </a>
 
-        <a href="marcas/xerox.html" class="brand-card">
+        <a href="marcas/xerox.html" class="brand-card" style="--brand-color:#e4002b">
           <div class="brand-card__logo-wrap">
             <img src="img/logos/xerox.svg" alt="Xerox" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
             <div class="brand-card__logo-fallback" style="display:none">XEROX</div>
@@ -169,11 +195,12 @@
           <div class="brand-card__body">
             <h2 class="brand-card__name">Xerox</h2>
             <p class="brand-card__aliases">WorkCentre · AltaLink · VersaLink</p>
+            <span class="brand-card__count">6 modelos</span>
             <span class="brand-card__link">Ver guía →</span>
           </div>
         </a>
 
-        <a href="marcas/kyocera.html" class="brand-card">
+        <a href="marcas/kyocera.html" class="brand-card" style="--brand-color:#e4002b">
           <div class="brand-card__logo-wrap">
             <img src="img/logos/kyocera.svg" alt="Kyocera" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
             <div class="brand-card__logo-fallback" style="display:none">KYOCERA</div>
@@ -181,11 +208,12 @@
           <div class="brand-card__body">
             <h2 class="brand-card__name">Kyocera</h2>
             <p class="brand-card__aliases">TASKalfa · ECOSYS</p>
+            <span class="brand-card__count">5 modelos</span>
             <span class="brand-card__link">Ver guía →</span>
           </div>
         </a>
 
-        <a href="marcas/canon.html" class="brand-card">
+        <a href="marcas/canon.html" class="brand-card" style="--brand-color:#cc0000">
           <div class="brand-card__logo-wrap">
             <img src="img/logos/canon.svg" alt="Canon" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
             <div class="brand-card__logo-fallback" style="display:none">CANON</div>
@@ -193,11 +221,12 @@
           <div class="brand-card__body">
             <h2 class="brand-card__name">Canon</h2>
             <p class="brand-card__aliases">imageRUNNER · imageRUNNER ADVANCE</p>
+            <span class="brand-card__count">5 modelos</span>
             <span class="brand-card__link">Ver guía →</span>
           </div>
         </a>
 
-        <a href="marcas/sharp.html" class="brand-card">
+        <a href="marcas/sharp.html" class="brand-card" style="--brand-color:#003087">
           <div class="brand-card__logo-wrap">
             <img src="img/logos/sharp.svg" alt="Sharp" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
             <div class="brand-card__logo-fallback" style="display:none">SHARP</div>
@@ -205,11 +234,12 @@
           <div class="brand-card__body">
             <h2 class="brand-card__name">Sharp</h2>
             <p class="brand-card__aliases">MX Series · BP Series</p>
+            <span class="brand-card__count">4 modelos</span>
             <span class="brand-card__link">Ver guía →</span>
           </div>
         </a>
 
-        <a href="marcas/hp.html" class="brand-card">
+        <a href="marcas/hp.html" class="brand-card" style="--brand-color:#0096d6">
           <div class="brand-card__logo-wrap">
             <img src="img/logos/hp.svg" alt="HP" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
             <div class="brand-card__logo-fallback" style="display:none">HP</div>
@@ -217,11 +247,12 @@
           <div class="brand-card__body">
             <h2 class="brand-card__name">HP</h2>
             <p class="brand-card__aliases">LaserJet MFP · Color LaserJet MFP</p>
+            <span class="brand-card__count">4 modelos</span>
             <span class="brand-card__link">Ver guía →</span>
           </div>
         </a>
 
-        <a href="marcas/toshiba.html" class="brand-card">
+        <a href="marcas/toshiba.html" class="brand-card" style="--brand-color:#cc0000">
           <div class="brand-card__logo-wrap">
             <img src="img/logos/toshiba.svg" alt="Toshiba" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
             <div class="brand-card__logo-fallback" style="display:none">TOSHIBA</div>
@@ -229,11 +260,12 @@
           <div class="brand-card__body">
             <h2 class="brand-card__name">Toshiba</h2>
             <p class="brand-card__aliases">e-STUDIO · AC Series · A Series</p>
+            <span class="brand-card__count">12 modelos</span>
             <span class="brand-card__link">Ver guía →</span>
           </div>
         </a>
 
-        <a href="marcas/brother.html" class="brand-card">
+        <a href="marcas/brother.html" class="brand-card" style="--brand-color:#003087">
           <div class="brand-card__logo-wrap">
             <img src="img/logos/brother.svg" alt="Brother" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
             <div class="brand-card__logo-fallback" style="display:none">BROTHER</div>
@@ -241,11 +273,12 @@
           <div class="brand-card__body">
             <h2 class="brand-card__name">Brother</h2>
             <p class="brand-card__aliases">MFC · DCP · LaserJet</p>
+            <span class="brand-card__count">9 modelos</span>
             <span class="brand-card__link">Ver guía →</span>
           </div>
         </a>
 
-        <a href="marcas/samsung.html" class="brand-card">
+        <a href="marcas/samsung.html" class="brand-card" style="--brand-color:#1428a0">
           <div class="brand-card__logo-wrap">
             <img src="img/logos/samsung.svg" alt="Samsung" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
             <div class="brand-card__logo-fallback" style="display:none">SAMSUNG</div>
@@ -253,11 +286,12 @@
           <div class="brand-card__body">
             <h2 class="brand-card__name">Samsung</h2>
             <p class="brand-card__aliases">SCX · CLX · SL-X (adquirida por HP)</p>
+            <span class="brand-card__count">7 modelos</span>
             <span class="brand-card__link">Ver guía →</span>
           </div>
         </a>
 
-        <a href="marcas/oki.html" class="brand-card">
+        <a href="marcas/oki.html" class="brand-card" style="--brand-color:#e4002b">
           <div class="brand-card__logo-wrap">
             <img src="img/logos/oki.svg" alt="OKI" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
             <div class="brand-card__logo-fallback" style="display:none">OKI</div>
@@ -265,11 +299,12 @@
           <div class="brand-card__body">
             <h2 class="brand-card__name">OKI</h2>
             <p class="brand-card__aliases">MC Series · ES Series</p>
+            <span class="brand-card__count">9 modelos</span>
             <span class="brand-card__link">Ver guía →</span>
           </div>
         </a>
 
-        <a href="marcas/lexmark.html" class="brand-card">
+        <a href="marcas/lexmark.html" class="brand-card" style="--brand-color:#e4002b">
           <div class="brand-card__logo-wrap">
             <img src="img/logos/lexmark.svg" alt="Lexmark" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
             <div class="brand-card__logo-fallback" style="display:none">LEXMARK</div>
@@ -277,6 +312,7 @@
           <div class="brand-card__body">
             <h2 class="brand-card__name">Lexmark</h2>
             <p class="brand-card__aliases">MX · CX · XM · CS</p>
+            <span class="brand-card__count">10 modelos</span>
             <span class="brand-card__link">Ver guía →</span>
           </div>
         </a>
