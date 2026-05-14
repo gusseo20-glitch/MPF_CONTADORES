@@ -1,0 +1,64 @@
+/* ── Tablet (≤1024px) ── */
+@media (max-width: 1024px) {
+  .main-content {
+    padding: 1.5rem 1.75rem;
+  }
+  .home-hero__title { font-size: 1.6rem; }
+}
+
+/* ── Mobile (≤768px) ── */
+@media (max-width: 768px) {
+  .hamburger { display: flex; }
+
+  .sidebar {
+    transform: translateX(-100%);
+    width: min(var(--sidebar-width), 85vw);
+  }
+  .sidebar.is-open {
+    transform: translateX(0);
+  }
+  .sidebar-overlay.is-open {
+    display: block;
+  }
+
+  .main-content {
+    margin-left: 0;
+    max-width: 100%;
+    padding: 1.25rem 1rem;
+  }
+  .site-footer {
+    margin-left: 0;
+    padding: 1rem;
+  }
+
+  .brand-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 0.875rem;
+  }
+  .brand-card { padding: 1.1rem 0.9rem; }
+  .brand-card__logo-wrap { width: 56px; height: 40px; }
+
+  .home-hero { padding: 1.5rem 0 1.25rem; }
+  .home-hero__title { font-size: 1.35rem; }
+
+  .brand-hero {
+    flex-direction: column;
+    text-align: center;
+    padding: 1.25rem;
+  }
+
+  .card { padding: 1.1rem; }
+
+  .table-toolbar { flex-direction: column; align-items: stretch; }
+  .table-search-input { min-width: unset; }
+
+  .header-search { display: none; }
+
+  .section-title { font-size: 1rem; }
+}
+
+/* ── Small mobile (≤400px) ── */
+@media (max-width: 400px) {
+  .brand-grid { grid-template-columns: 1fr 1fr; }
+  .home-hero__title { font-size: 1.2rem; }
+}
