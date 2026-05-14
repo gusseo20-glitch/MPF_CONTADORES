@@ -1,4 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 48">
-  <rect width="120" height="48" rx="4" fill="#e4002b"/>
-  <text x="60" y="31" font-family="Arial,sans-serif" font-size="16" font-weight="700" fill="white" text-anchor="middle" letter-spacing="1">Lexmark</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 60">
+  <!-- Green geometric diamond mark -->
+  <polygon points="16,10 28,30 16,50 4,30" fill="#00A650"/>
+  <!-- Wordmark -->
+  <text x="110" y="42" font-family="Arial,Helvetica,sans-serif" font-size="28" font-weight="700" fill="#32323C" text-anchor="middle" letter-spacing="1">Lexmark</text>
 </svg>
