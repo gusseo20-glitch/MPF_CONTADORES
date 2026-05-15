@@ -1,11 +1,11 @@
 :root {
-  --color-sidebar-bg: #1a2540;
-  --color-sidebar-text: #c8d0e0;
-  --color-sidebar-hover: #253058;
-  --color-sidebar-active: #e8600a;
-  --color-accent: #e8600a;
-  --color-accent-hover: #cf5309;
-  --color-accent-light: #fff3ec;
+  --color-sidebar-bg: #004d5e;
+  --color-sidebar-text: #b8d8df;
+  --color-sidebar-hover: #005f73;
+  --color-sidebar-active: #006983;
+  --color-accent: #006983;
+  --color-accent-hover: #005064;
+  --color-accent-light: #e8f4f7;
   --color-bg: #f5f6f8;
   --color-surface: #ffffff;
   --color-text: #1e2333;

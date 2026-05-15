@@ -493,7 +493,7 @@ details.accordion-item > summary:hover { background: var(--color-bg); }
   min-width: 1.5rem;
   height: 1.5rem;
   border-radius: 50%;
-  background: #1a2540;
+  background: var(--color-accent);
   color: #fff;
   font-size: 0.72rem;
   font-weight: 700;
