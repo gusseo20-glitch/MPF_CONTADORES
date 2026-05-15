@@ -119,6 +119,18 @@
             Lexmark
           </a>
         </li>
+        <li>
+          <a href="marcas/epson.html" class="sidebar-nav__link">
+            <svg class="sidebar-nav__link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="14" rx="2"/><path d="M7 21h10M12 17v4"/></svg>
+            Epson
+          </a>
+        </li>
+        <li>
+          <a href="marcas/riso.html" class="sidebar-nav__link">
+            <svg class="sidebar-nav__link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="14" rx="2"/><path d="M7 21h10M12 17v4"/></svg>
+            RISO
+          </a>
+        </li>
       </ul>
     </nav>
 
@@ -130,17 +142,17 @@
           Guía técnica de referencia
         </div>
         <h1 class="home-hero__title">Códigos de Contador en Equipos Multifunción</h1>
-        <p class="home-hero__subtitle">Basada en manuales oficiales del fabricante · 12 marcas · Funciona sin conexión</p>
+        <p class="home-hero__subtitle">Basada en manuales oficiales del fabricante · 14 marcas · Funciona sin conexión</p>
       </div>
 
       <!-- Stats -->
       <div class="home-stats">
         <div class="home-stats__item">
-          <span class="home-stats__number">12</span>
+          <span class="home-stats__number">14</span>
           <span class="home-stats__label">Marcas</span>
         </div>
         <div class="home-stats__item">
-          <span class="home-stats__number">93</span>
+          <span class="home-stats__number">1400+</span>
           <span class="home-stats__label">Modelos</span>
         </div>
         <div class="home-stats__item">
@@ -312,7 +324,33 @@
           <div class="brand-card__body">
             <h2 class="brand-card__name">Lexmark</h2>
             <p class="brand-card__aliases">MX · CX · XM · CS</p>
-            <span class="brand-card__count">10 modelos</span>
+            <span class="brand-card__count">57 modelos</span>
+            <span class="brand-card__link">Ver guía →</span>
+          </div>
+        </a>
+
+        <a href="marcas/epson.html" class="brand-card" style="--brand-color:#003399">
+          <div class="brand-card__logo-wrap">
+            <img src="img/logos/epson.svg" alt="Epson" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="brand-card__logo-fallback" style="display:none">EPSON</div>
+          </div>
+          <div class="brand-card__body">
+            <h2 class="brand-card__name">Epson</h2>
+            <p class="brand-card__aliases">WorkForce Pro · AM-C · EM-C · AL</p>
+            <span class="brand-card__count">31 modelos</span>
+            <span class="brand-card__link">Ver guía →</span>
+          </div>
+        </a>
+
+        <a href="marcas/riso.html" class="brand-card" style="--brand-color:#e4002b">
+          <div class="brand-card__logo-wrap">
+            <img src="img/logos/riso.svg" alt="RISO" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="brand-card__logo-fallback" style="display:none">RISO</div>
+          </div>
+          <div class="brand-card__body">
+            <h2 class="brand-card__name">RISO</h2>
+            <p class="brand-card__aliases">GD · GL · SF · EZ · MF</p>
+            <span class="brand-card__count">14 modelos</span>
             <span class="brand-card__link">Ver guía →</span>
           </div>
         </a>
@@ -436,6 +474,22 @@
       { model:"XM1242", brand:"Lexmark", brandSlug:"lexmark", method:"Método B", display:"LCD" },
       { model:"CX317dn", brand:"Lexmark", brandSlug:"lexmark", method:"Método C", display:"LCD" },
       { model:"CX417de", brand:"Lexmark", brandSlug:"lexmark", method:"Método C", display:"LCD" },
+      // Epson
+      { model:"AM-C4000", brand:"Epson", brandSlug:"epson", method:"Método A", display:"Táctil" },
+      { model:"EM-C800", brand:"Epson", brandSlug:"epson", method:"Método A", display:"Táctil" },
+      { model:"WF-C20600", brand:"Epson", brandSlug:"epson", method:"Método A", display:"Táctil" },
+      { model:"WF-C5890", brand:"Epson", brandSlug:"epson", method:"Método B", display:"LCD" },
+      { model:"AL-M400", brand:"Epson", brandSlug:"epson", method:"Método B", display:"LCD" },
+      { model:"WF-M5799", brand:"Epson", brandSlug:"epson", method:"Método B", display:"LCD" },
+      { model:"ET-5880", brand:"Epson", brandSlug:"epson", method:"Método C", display:"LCD" },
+      { model:"ET-4850", brand:"Epson", brandSlug:"epson", method:"Método C", display:"LCD" },
+      // RISO
+      { model:"GD 7330", brand:"RISO", brandSlug:"riso", method:"Método A", display:"Táctil" },
+      { model:"GL 7430", brand:"RISO", brandSlug:"riso", method:"Método A", display:"Táctil" },
+      { model:"SF 9350", brand:"RISO", brandSlug:"riso", method:"Método B", display:"LCD" },
+      { model:"MF 9350", brand:"RISO", brandSlug:"riso", method:"Método B", display:"LCD" },
+      { model:"EZ 200", brand:"RISO", brandSlug:"riso", method:"Método B", display:"LCD" },
+      { model:"FT 5000", brand:"RISO", brandSlug:"riso", method:"Método C", display:"LCD" },
     ];
   </script>
   <script src="js/navigation.js"></script>
