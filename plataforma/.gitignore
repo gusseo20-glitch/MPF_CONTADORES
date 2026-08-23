@@ -1,0 +1,9 @@
+__pycache__/
+*.py[cod]
+config.json
+estado_bot.json
+estado_*.json
+bot.log
+datos/*.json
+datos/*.csv
+!datos/.gitkeep

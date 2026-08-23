@@ -1,0 +1,105 @@
+:root {
+  --fondo: #0f1216;
+  --panel: #171b21;
+  --panel-alt: #1e242c;
+  --texto: #e6e9ef;
+  --suave: #98a2b3;
+  --borde: #2a313b;
+  --acento: #4da3ff;
+  --verde: #3ddc97;
+  --rojo: #ff6b6b;
+  --ambar: #ffc857;
+}
+@media (prefers-color-scheme: light) {
+  :root {
+    --fondo: #f5f7fa; --panel: #ffffff; --panel-alt: #eef2f7; --texto: #101418;
+    --suave: #5b6675; --borde: #dbe2ea; --acento: #0b63c5;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--fondo); color: var(--texto);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.5;
+}
+header {
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  padding: 1rem 1.5rem; border-bottom: 1px solid var(--borde); flex-wrap: wrap;
+}
+.marca { display: flex; align-items: center; gap: .7rem; }
+.punto { width: 12px; height: 12px; border-radius: 50%; background: var(--verde);
+         box-shadow: 0 0 0 4px color-mix(in srgb, var(--verde) 20%, transparent); }
+h1 { font-size: 1.15rem; margin: 0; font-weight: 650; letter-spacing: -.01em; }
+h2 { font-size: 1rem; margin: 0 0 1rem; text-transform: uppercase; letter-spacing: .08em;
+     color: var(--suave); font-weight: 600; }
+h3 { font-size: .9rem; margin: 1.2rem 0 .5rem; color: var(--suave); }
+.etiqueta { font-size: .78rem; color: var(--suave); border: 1px solid var(--borde);
+            padding: .25rem .6rem; border-radius: 999px; }
+.aviso {
+  margin: 1rem 1.5rem 0; padding: .85rem 1rem; border-radius: 10px; font-size: .88rem;
+  background: color-mix(in srgb, var(--ambar) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--ambar) 45%, transparent);
+}
+main { padding: 1.5rem; display: grid; gap: 1.25rem; max-width: 1180px; margin: 0 auto; }
+.panel { background: var(--panel); border: 1px solid var(--borde); border-radius: 14px;
+         padding: 1.25rem; }
+.rejilla { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: .9rem; }
+label { display: flex; flex-direction: column; gap: .35rem; font-size: .8rem; color: var(--suave); }
+input, select {
+  background: var(--panel-alt); color: var(--texto); border: 1px solid var(--borde);
+  border-radius: 8px; padding: .5rem .6rem; font-size: .92rem; font-family: inherit;
+}
+input:focus, select:focus { outline: 2px solid var(--acento); outline-offset: 1px; }
+.botonera { display: flex; gap: .6rem; flex-wrap: wrap; margin-top: 1rem; }
+button {
+  background: var(--panel-alt); color: var(--texto); border: 1px solid var(--borde);
+  border-radius: 8px; padding: .55rem 1rem; font-size: .9rem; cursor: pointer;
+  font-family: inherit; transition: filter .15s;
+}
+button:hover:not(:disabled) { filter: brightness(1.25); }
+button:disabled { opacity: .5; cursor: progress; }
+button.primario { background: var(--acento); border-color: var(--acento); color: #fff; }
+button.peligro { border-color: color-mix(in srgb, var(--rojo) 50%, transparent); }
+.estado { font-size: .85rem; color: var(--suave); min-height: 1.2rem; margin: .8rem 0 0; }
+.tarjetas { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: .75rem; }
+.tarjeta { background: var(--panel-alt); border: 1px solid var(--borde); border-radius: 10px;
+           padding: .75rem .9rem; }
+.tarjeta .clave { font-size: .72rem; color: var(--suave); text-transform: uppercase;
+                  letter-spacing: .05em; }
+.tarjeta .valor { font-size: 1.35rem; font-weight: 650; font-variant-numeric: tabular-nums; }
+.positivo { color: var(--verde); } .negativo { color: var(--rojo); }
+.grafico { margin-top: 1.25rem; }
+svg { width: 100%; height: 320px; background: var(--panel-alt); border-radius: 10px;
+      border: 1px solid var(--borde); }
+.leyenda { display: flex; gap: 1.2rem; font-size: .8rem; color: var(--suave); margin-top: .5rem; }
+.linea { display: inline-block; width: 18px; height: 3px; border-radius: 2px; vertical-align: middle; }
+.linea.estrategia { background: var(--acento); }
+.linea.referencia { background: var(--suave); }
+.tabla-envoltura { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: .85rem; }
+th, td { text-align: right; padding: .45rem .6rem; border-bottom: 1px solid var(--borde);
+         font-variant-numeric: tabular-nums; white-space: nowrap; }
+th:first-child, td:first-child { text-align: left; }
+th { color: var(--suave); font-weight: 600; font-size: .75rem; text-transform: uppercase; }
+.explicacion { font-size: .87rem; color: var(--suave); margin-top: -.5rem; }
+.lectura { font-size: .92rem; padding: .8rem 1rem; border-radius: 10px;
+           background: var(--panel-alt); border-left: 3px solid var(--acento); }
+.diagnostico { white-space: pre-wrap; font-size: .85rem; background: var(--panel-alt);
+               padding: .9rem; border-radius: 10px; border: 1px solid var(--borde);
+               overflow-x: auto; }
+.mensaje-aviso { font-size: .85rem; padding: .6rem .8rem; border-radius: 8px; margin-top: .8rem;
+  background: color-mix(in srgb, var(--ambar) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--ambar) 40%, transparent); }
+.barra { height: 26px; border-radius: 6px; background: var(--panel-alt); overflow: hidden;
+         border: 1px solid var(--borde); margin: 1rem 0 .4rem; }
+.barra > div { height: 100%; background: linear-gradient(90deg, var(--acento), var(--verde)); }
+.dos-columnas { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+#diario { list-style: none; padding: 0; margin: 0; max-height: 320px; overflow-y: auto;
+          font-size: .85rem; }
+#diario li { padding: .45rem .2rem; border-bottom: 1px solid var(--borde); }
+#diario .tipo { font-size: .7rem; text-transform: uppercase; letter-spacing: .05em;
+                color: var(--suave); margin-right: .5rem; }
+details summary { cursor: pointer; color: var(--suave); font-size: .85rem; margin-top: 1rem; }
+footer { padding: 1.5rem; text-align: center; color: var(--suave); font-size: .8rem;
+         border-top: 1px solid var(--borde); }
+code { background: var(--panel-alt); padding: .1rem .35rem; border-radius: 4px; font-size: .85em; }
