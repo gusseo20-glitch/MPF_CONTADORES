@@ -64,7 +64,7 @@ Duplicar 50 € es perfectamente posible. Lo que no es posible es hacerlo rápid
 cd plataforma
 
 python3 demo.py                      # recorrido completo sin conexión (datos simulados)
-python3 -m unittest discover -s tests -t .    # 49 pruebas
+python3 -m unittest discover -s tests -t .    # 62 pruebas
 python3 -m plataforma.cli --help
 ```
 
@@ -150,7 +150,8 @@ plataforma/
 ├── indicadores.py   SMA, EMA, RSI, ATR, Sharpe, Sortino, máxima caída, percentiles
 ├── estrategias.py   Estrategias + referencia pasiva
 ├── riesgo.py        Tamaño de posición, stops, cortacircuitos
-├── broker.py        Costes reales, bróker de papel, hueco para bróker real
+├── broker.py        Costes reales y bróker de papel
+├── alpaca.py        Bróker real: API de Alpaca (paper y dinero real)
 ├── backtest.py      Motor sin sesgo de futuro + métricas
 ├── optimizador.py   Rejilla de parámetros con validación fuera de muestra
 ├── montecarlo.py    Probabilidad de duplicar y de arruinarse
@@ -169,16 +170,52 @@ Decisiones de diseño que evitan resultados engañosos:
 - La optimización separa entrenamiento y validación, y **avisa explícitamente** cuando el
   resultado se degrada fuera de muestra.
 
-## Operar con dinero real
+## Operar de verdad (Alpaca)
 
-La plataforma opera **siempre en papel**. `BrokerReal` (en `broker.py`) es un punto de
-conexión deliberadamente sin implementar. Si algún día decides dar ese paso:
+La plataforma incluye la conexión con **Alpaca** (alpaca.markets), un bróker con API
+pública, **cero comisiones y fracciones de acción desde 1 $** — el único formato en el
+que una cuenta de 50 € no muere devorada por los costes. La misma API tiene un entorno
+de práctica (*paper*) gratuito, así que el camino tiene tres etapas y ninguna se salta:
 
-1. Opera en papel varios meses primero, con la estrategia y el capital que usarías de verdad.
-2. Implementa `BrokerReal` con las credenciales de tu bróker, **fuera del repositorio**
-   (variables de entorno, nunca en el código).
-3. Empieza por el mínimo que puedas permitirte perder del todo.
-4. La responsabilidad legal y económica es enteramente tuya.
+**Etapa 1 — Cuenta y claves (esto solo puedes hacerlo tú).**
+Abre cuenta en [alpaca.markets](https://alpaca.markets) (identificación personal
+incluida; comprueba la disponibilidad para tu país durante el alta). Genera primero las
+claves del entorno *paper* en su panel y exporta las credenciales **fuera del repositorio**:
+
+```bash
+export APCA_API_KEY_ID="tu clave"
+export APCA_API_SECRET_KEY="tu secreto"
+```
+
+**Etapa 2 — Semanas en paper del bróker.** La misma API, el mismo bot, cero riesgo:
+
+```bash
+python3 -m plataforma.cli cuenta --modo alpaca_papel          # verificar conexión
+python3 -m plataforma.cli bot ciclo --modo alpaca_papel -s SPY,QQQ
+python3 -m plataforma.cli bot sincronizar --modo alpaca_papel # cuadrar con el bróker
+```
+
+Con `cron`, un ciclo al día tras el cierre de EE. UU.; las órdenes quedan en cola y se
+ejecutan en la apertura siguiente, exactamente la hipótesis del backtest. Cada orden
+lleva un identificador por fecha y símbolo: si el ciclo se lanza dos veces el mismo día,
+el bróker rechaza el duplicado en lugar de comprar dos veces.
+
+**Etapa 3 — Dinero real, si tras eso sigues queriendo.** Genera las claves del entorno
+real, ingresa solo lo que puedas permitirte perder del todo, y confirma explícitamente:
+
+```bash
+export APCA_API_KEY_ID="clave del entorno real"
+export APCA_API_SECRET_KEY="secreto del entorno real"
+export PLATAFORMA_DINERO_REAL=acepto
+python3 -m plataforma.cli bot ciclo --modo alpaca_real -s SPY,QQQ
+```
+
+Sin esa variable, el modo real se niega a arrancar. Ten presente: Alpaca opera bolsa
+estadounidense en dólares (tus euros se convierten al depositar), la fiscalidad de tu
+país corre de tu cuenta, y la responsabilidad económica y legal de cada orden es
+enteramente tuya. La plataforma pone las salvaguardas — stops, límite de riesgo por
+operación, cortacircuitos, confirmación explícita — pero ninguna salvaguarda convierte
+la bolsa en una apuesta segura.
 
 ## Aviso legal
 

@@ -14,7 +14,7 @@ import json
 import os
 from datetime import datetime, timezone
 
-from .broker import BrokerPapel, unidades_asequibles
+from .broker import SIN_COSTES, BrokerPapel, unidades_asequibles
 from .config import Config
 from .datos import ErrorDatos, crear_proveedor
 from .estrategias import crear_estrategia
@@ -29,12 +29,28 @@ class Bot:
         self.proveedor = crear_proveedor(self.config.proveedor)
         self.estrategia = crear_estrategia(self.config.estrategia,
                                            **self.config.parametros_estrategia)
-        self.broker = BrokerPapel(self.config.objeto_costes())
+        self.broker = self._crear_broker()
         from .riesgo import GestorRiesgo  # import local: evita ciclo en herramientas
         self.gestor = GestorRiesgo(self.config.objeto_riesgo())
         self.cartera = Cartera(efectivo=self.config.capital)
         self.diario: list[dict] = []
         self.cargar_estado()
+
+    def _crear_broker(self):
+        """Elige el broker segun el modo configurado, con sus salvaguardas."""
+        modo = self.config.modo
+        if modo == "papel":
+            return BrokerPapel(self.config.objeto_costes())
+        if modo in ("alpaca_papel", "alpaca_real"):
+            if modo == "alpaca_real" and os.environ.get("PLATAFORMA_DINERO_REAL") != "acepto":
+                raise RuntimeError(
+                    "modo alpaca_real: para operar con dinero real exporta "
+                    "PLATAFORMA_DINERO_REAL=acepto — es tu confirmacion de que "
+                    "asumes el riesgo de perdida, incluida la total"
+                )
+            from .alpaca import BrokerAlpaca, ClienteAlpaca
+            return BrokerAlpaca(ClienteAlpaca(papel=(modo != "alpaca_real")))
+        raise RuntimeError(f"modo desconocido: {modo} (papel | alpaca_papel | alpaca_real)")
 
     # ------------------------------------------------------------------ estado
     def cargar_estado(self) -> bool:
@@ -100,12 +116,6 @@ class Bot:
 
     def ejecutar_ciclo(self) -> dict:
         """Un ciclo completo de decision sobre todos los simbolos configurados."""
-        if self.config.modo != "papel":
-            raise RuntimeError(
-                "Solo esta implementado el modo 'papel'. La operativa real exige "
-                "implementar BrokerReal con tus propias credenciales."
-            )
-
         acciones: list[dict] = []
         precios: dict[str, float] = {}
         historicos: dict[str, list] = {}
@@ -184,8 +194,8 @@ class Bot:
         capital_total = self.cartera.valor_total(precios)
         unidades = self.gestor.unidades(capital_total, self.cartera.efectivo, precio, stop,
                                         senal.fuerza)
-        unidades = unidades_asequibles(self.broker.costes, self.cartera.efectivo, precio,
-                                       unidades)
+        costes = getattr(self.broker, "costes", SIN_COSTES)
+        unidades = unidades_asequibles(costes, self.cartera.efectivo, precio, unidades)
         if unidades <= 0 or unidades * precio < self.gestor.p.importe_minimo:
             return self._anotar(
                 "descartada", simbolo,
@@ -193,12 +203,12 @@ class Bot:
                 f"de {self.gestor.p.importe_minimo:.2f} EUR")
         ejecucion = self.broker.comprar(simbolo, unidades, precio, barras[-1].fecha)
         coste = -ejecucion.efectivo
-        if coste > self.cartera.efectivo:
+        if coste > self.cartera.efectivo and not self.broker.irreversible:
             self.broker.ejecuciones.pop()
             return self._anotar("descartada", simbolo, "efectivo insuficiente tras comisiones")
         self.cartera.efectivo -= coste
         self.cartera.posiciones[simbolo] = Posicion(
-            simbolo=simbolo, unidades=unidades, precio_entrada=ejecucion.precio,
+            simbolo=simbolo, unidades=ejecucion.unidades, precio_entrada=ejecucion.precio,
             fecha_entrada=barras[-1].fecha, stop=stop, stop_inicial=stop,
             objetivo=self.gestor.calcular_objetivo(ejecucion.precio, stop),
             maximo_favorable=barras[-1].maximo, comision_entrada=ejecucion.comision,
@@ -223,6 +233,64 @@ class Bot:
         return self._anotar("venta", simbolo, motivo, unidades=round(posicion.unidades, 6),
                             precio=round(ejecucion.precio, 4),
                             beneficio=round(operacion.beneficio, 2))
+
+    # ------------------------------------------------------------ sincronizar
+    def sincronizar(self) -> dict:
+        """Trae del broker (Alpaca) el efectivo y las posiciones reales.
+
+        Cuadra la cartera local con la del broker: es lo que arregla cualquier
+        deriva (ordenes en cola que se ejecutaron mas tarde, redondeos...).
+        """
+        cliente = getattr(self.broker, "cliente", None)
+        if cliente is None:
+            raise RuntimeError(
+                "sincronizar solo tiene sentido con un broker Alpaca "
+                "(modo alpaca_papel o alpaca_real)"
+            )
+        cuenta = cliente.cuenta()
+        remotas = cliente.posiciones()
+        self.cartera.efectivo = float(cuenta.get("cash", 0.0))
+        nuevas: dict[str, Posicion] = {}
+        for remota in remotas:
+            simbolo = remota["symbol"]
+            unidades = float(remota["qty"])
+            entrada = float(remota["avg_entry_price"])
+            previa = self.cartera.posiciones.get(simbolo)
+            stop = previa.stop if previa else None
+            if stop is None:
+                try:
+                    barras = self.proveedor.historico(simbolo, 60)
+                    stop = self.gestor.calcular_stop(barras, entrada)
+                except ErrorDatos:
+                    stop = entrada * 0.92
+            nuevas[simbolo] = Posicion(
+                simbolo=simbolo, unidades=unidades, precio_entrada=entrada,
+                fecha_entrada=(previa.fecha_entrada if previa
+                               else datetime.now(timezone.utc).strftime("%Y-%m-%d")),
+                stop=stop,
+                stop_inicial=(previa.stop_inicial if previa else stop),
+                objetivo=(previa.objetivo if previa
+                          else self.gestor.calcular_objetivo(entrada, stop)),
+                maximo_favorable=(previa.maximo_favorable if previa else entrada),
+                comision_entrada=(previa.comision_entrada if previa else 0.0),
+                capital_antes=(previa.capital_antes if previa
+                               else float(cuenta.get("equity", 0.0) or 0.0)),
+            )
+        self.cartera.posiciones = nuevas
+        self._anotar("sincronizacion", "",
+                     f"{len(nuevas)} posiciones y {self.cartera.efectivo:.2f} de "
+                     "efectivo traidos del broker")
+        self.guardar_estado()
+        return {
+            "modo": self.config.modo,
+            "efectivo": round(self.cartera.efectivo, 2),
+            "posiciones": [
+                {"simbolo": q.simbolo, "unidades": q.unidades,
+                 "precio_entrada": q.precio_entrada,
+                 "stop": round(q.stop, 4) if q.stop else None}
+                for q in nuevas.values()
+            ],
+        }
 
     # ---------------------------------------------------------------- consulta
     def estado(self) -> dict:

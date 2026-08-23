@@ -45,6 +45,8 @@ def _config_desde_args(args) -> Config:
         config.costes["comision_fija"] = args.comision
     if getattr(args, "riesgo", None) is not None:
         config.riesgo["riesgo_por_operacion"] = args.riesgo
+    if getattr(args, "modo", None):
+        config.modo = args.modo
     return config
 
 
@@ -178,7 +180,13 @@ def cmd_montecarlo(args) -> int:
 
 def cmd_bot(args) -> int:
     config = _config_desde_args(args)
-    bot = Bot(config)
+    try:
+        bot = Bot(config)
+    except RuntimeError as exc:
+        print(f"No se pudo arrancar el bot: {exc}", file=sys.stderr)
+        return 1
+    if config.modo == "alpaca_real":
+        print("!! MODO DINERO REAL: las ordenes de este ciclo se envian al mercado.")
     if args.accion == "reiniciar":
         bot.reiniciar()
         print(f"Estado reiniciado con {config.capital:.2f} EUR en {bot.ruta_estado}")
@@ -186,7 +194,18 @@ def cmd_bot(args) -> int:
     if args.accion == "estado":
         print(json.dumps(bot.estado(), indent=2, ensure_ascii=False))
         return 0
-    resultado = bot.ejecutar_ciclo()
+    if args.accion == "sincronizar":
+        try:
+            print(json.dumps(bot.sincronizar(), indent=2, ensure_ascii=False))
+        except RuntimeError as exc:
+            print(f"No se pudo sincronizar: {exc}", file=sys.stderr)
+            return 1
+        return 0
+    try:
+        resultado = bot.ejecutar_ciclo()
+    except RuntimeError as exc:
+        print(f"El ciclo fallo: {exc}", file=sys.stderr)
+        return 1
     print(f"[{resultado['fecha']}] cartera {resultado['valor_cartera']:.2f} EUR "
           f"({resultado['rendimiento']:+.2%}) | efectivo {resultado['efectivo']:.2f} | "
           f"{resultado['posiciones']} posiciones")
@@ -195,6 +214,37 @@ def cmd_bot(args) -> int:
         print(f"  {accion['tipo']:14s} {simbolo}{accion['mensaje']}")
     if resultado["detenido"]:
         print("  !! operativa detenida por el cortacircuitos de riesgo")
+    return 0
+
+
+def cmd_cuenta(args) -> int:
+    config = _config_desde_args(args)
+    from .alpaca import ClienteAlpaca, ErrorAlpaca
+    papel = config.modo != "alpaca_real"
+    try:
+        cliente = ClienteAlpaca(papel=papel)
+        cuenta = cliente.cuenta()
+        reloj = cliente.reloj()
+        posiciones = cliente.posiciones()
+    except (ErrorAlpaca, RuntimeError) as exc:
+        print(f"No se pudo consultar Alpaca: {exc}", file=sys.stderr)
+        return 1
+    entorno = "PAPER (practica)" if papel else "DINERO REAL"
+    print(f"Cuenta Alpaca [{entorno}]")
+    print(f"  estado    : {cuenta.get('status')}")
+    print(f"  efectivo  : {float(cuenta.get('cash', 0)):,.2f} USD")
+    print(f"  cartera   : {float(cuenta.get('equity', 0)):,.2f} USD")
+    print(f"  mercado   : {'ABIERTO' if reloj.get('is_open') else 'cerrado'} "
+          f"(proxima apertura {reloj.get('next_open', '?')})")
+    if posiciones:
+        print("  posiciones:")
+        for p in posiciones:
+            print(f"    {p['symbol']:6s} {float(p['qty']):>10.4f} unid. "
+                  f"entrada {float(p['avg_entry_price']):>9.2f} "
+                  f"actual {float(p.get('current_price', 0) or 0):>9.2f} "
+                  f"P/L {float(p.get('unrealized_pl', 0) or 0):>+8.2f} USD")
+    else:
+        print("  posiciones: ninguna")
     return 0
 
 
@@ -231,6 +281,8 @@ def construir_parser() -> argparse.ArgumentParser:
         sp.add_argument("--comision", type=float, help="comision fija por orden en EUR")
         sp.add_argument("--riesgo", type=float,
                         help="fraccion del capital arriesgada por operacion (0.02 = 2%%)")
+        sp.add_argument("--modo", choices=["papel", "alpaca_papel", "alpaca_real"],
+                        help="papel local, paper de Alpaca o dinero real")
         sp.add_argument("--config", default=RUTA_POR_DEFECTO)
         return sp
 
@@ -259,9 +311,12 @@ def construir_parser() -> argparse.ArgumentParser:
     m.set_defaults(func=cmd_montecarlo)
 
     t = comunes(sub.add_parser("bot", help="ejecuta el bot automatico en papel"))
-    t.add_argument("accion", choices=["ciclo", "estado", "reiniciar"], nargs="?",
-                   default="ciclo")
+    t.add_argument("accion", choices=["ciclo", "estado", "reiniciar", "sincronizar"],
+                   nargs="?", default="ciclo")
     t.set_defaults(func=cmd_bot)
+
+    q = comunes(sub.add_parser("cuenta", help="cuenta y posiciones en Alpaca"))
+    q.set_defaults(func=cmd_cuenta)
 
     w = comunes(sub.add_parser("web", help="panel web en el navegador"))
     w.add_argument("--puerto", type=int, default=8000)

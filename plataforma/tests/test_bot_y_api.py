@@ -43,10 +43,9 @@ class PruebasBot(unittest.TestCase):
             bot.ejecutar_ciclo()
         self.assertGreaterEqual(bot.cartera.efectivo, -1e-9)
 
-    def test_modo_real_no_esta_permitido(self):
-        bot = Bot(config_prueba("estado.json", modo="real"), ruta_estado=self.estado)
+    def test_modo_desconocido_no_arranca(self):
         with self.assertRaises(RuntimeError):
-            bot.ejecutar_ciclo()
+            Bot(config_prueba("estado.json", modo="real"), ruta_estado=self.estado)
 
     def test_reiniciar_vuelve_al_capital_inicial(self):
         bot = Bot(config_prueba("estado.json"), ruta_estado=self.estado)

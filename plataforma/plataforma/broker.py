@@ -90,6 +90,8 @@ class Ejecucion:
 
 class BrokerBase:
     nombre = "base"
+    #: True si las ordenes no se pueden deshacer localmente (broker de verdad)
+    irreversible = False
 
     def comprar(self, simbolo: str, unidades: float, precio: float, fecha: str) -> Ejecucion:
         raise NotImplementedError
@@ -123,21 +125,17 @@ class BrokerPapel(BrokerBase):
 
 
 class BrokerReal(BrokerBase):
-    """Punto de conexion para un broker real. Deliberadamente NO implementado.
+    """La conexion real esta en `plataforma.alpaca.BrokerAlpaca`.
 
-    Conectar dinero real exige, como minimo:
-      1. Tus propias credenciales de API, fuera del repositorio.
-      2. Haber operado en papel el tiempo suficiente para conocer el sistema.
-      3. Asumir tu que la responsabilidad legal y economica es tuya.
-
-    Implementa aqui las llamadas de tu broker (Alpaca, IBKR, etc.) si decides
-    dar ese paso. La plataforma funciona igual: solo cambia esta clase.
+    Se llega a ella por configuracion (modo `alpaca_papel` o `alpaca_real`),
+    con credenciales por variables de entorno y, para dinero real, la
+    confirmacion explicita PLATAFORMA_DINERO_REAL=acepto.
     """
 
     nombre = "real"
 
     def __init__(self, *_, **__) -> None:
         raise NotImplementedError(
-            "La operativa con dinero real no viene activada. Implementa BrokerReal "
-            "con las credenciales de tu broker y asume el riesgo conscientemente."
+            "Usa el modo 'alpaca_papel' o 'alpaca_real' en la configuracion: la "
+            "conexion real vive en plataforma.alpaca.BrokerAlpaca."
         )

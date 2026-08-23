@@ -25,7 +25,10 @@ class Config:
     proveedor: str = "auto"
     #: sesiones de historico que se descargan
     dias: int = 750
-    #: modo de operacion: papel (simulado) o real (no implementado a proposito)
+    #: modo de operacion:
+    #:   papel        simulador local (por defecto)
+    #:   alpaca_papel cuenta de practica de Alpaca (misma API, sin dinero real)
+    #:   alpaca_real  dinero real; exige PLATAFORMA_DINERO_REAL=acepto
     modo: str = "papel"
     costes: dict = field(default_factory=lambda: asdict(Costes()))
     riesgo: dict = field(default_factory=lambda: asdict(ParametrosRiesgo()))
