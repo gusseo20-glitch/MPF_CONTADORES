@@ -60,6 +60,22 @@ Duplicar 50 € es perfectamente posible. Lo que no es posible es hacerlo rápid
 
 ## Instalación y primeros pasos
 
+La vía rápida — clonar y ejecutar el instalador, que comprueba Python, pasa las
+62 pruebas y abre el panel en el navegador:
+
+```bash
+# macOS / Linux
+git clone -b claude/plataforma-inversion-automatica-wx1zl4 https://github.com/gusseo20-glitch/MPF_CONTADORES.git
+cd MPF_CONTADORES/plataforma
+./instalar.sh
+```
+
+En Windows: instala [Git](https://git-scm.com/download/win) y
+[Python](https://www.python.org/downloads/) (marcando *"Add python.exe to PATH"*),
+clona igual y haz doble clic en `instalar.bat`.
+
+A mano, si prefieres ver cada paso:
+
 ```bash
 cd plataforma
 
