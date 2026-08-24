@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plataforma de inversión automática</title>
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<header>
+  <div class="marca">
+    <span class="punto"></span>
+    <h1>Plataforma de inversión automática</h1>
+  </div>
+  <span class="etiqueta" id="modo">modo papel · dinero simulado</span>
+</header>
+
+<div class="aviso">
+  <strong>Aviso.</strong> Invertir en bolsa puede hacerte perder dinero, incluido todo el capital.
+  Ningún sistema puede garantizar que 50 € se conviertan en 100 €. Esta herramienta opera con
+  dinero simulado y no es asesoramiento financiero.
+</div>
+
+<main>
+  <section class="panel controles">
+    <h2>Configuración</h2>
+    <div class="rejilla">
+      <label>Capital (€)
+        <input type="number" id="capital" value="50" min="1" step="1">
+      </label>
+      <label>Activos
+        <input type="text" id="simbolos" value="SPY,QQQ,AAPL,MSFT" placeholder="SPY,QQQ">
+      </label>
+      <label>Estrategia
+        <select id="estrategia"></select>
+      </label>
+      <label>Sesiones de histórico
+        <input type="number" id="dias" value="750" min="60" max="5000" step="50">
+      </label>
+      <label>Comisión por orden (€)
+        <input type="number" id="comision" value="1" min="0" step="0.1">
+      </label>
+      <label>Riesgo por operación
+        <select id="riesgo">
+          <option value="0.01">1 % (prudente)</option>
+          <option value="0.02" selected>2 % (recomendado)</option>
+          <option value="0.05">5 % (agresivo)</option>
+          <option value="0.10">10 % (muy agresivo)</option>
+        </select>
+      </label>
+      <label>Datos
+        <select id="proveedor">
+          <option value="auto">Automático (reales, si hay red)</option>
+          <option value="yahoo">Yahoo Finance</option>
+          <option value="stooq">Stooq</option>
+          <option value="sintetico">Simulados (sin red)</option>
+        </select>
+      </label>
+    </div>
+    <div class="botonera">
+      <button id="btn-backtest" class="primario">Probar estrategia</button>
+      <button id="btn-montecarlo">¿Puedo duplicar?</button>
+      <button id="btn-optimizar">Optimizar parámetros</button>
+    </div>
+    <p class="estado" id="estado-carga"></p>
+  </section>
+
+  <section class="panel" id="panel-resultado" hidden>
+    <h2>Resultado del backtest</h2>
+    <div class="tarjetas" id="tarjetas"></div>
+    <div class="grafico">
+      <svg id="curva" viewBox="0 0 900 320" preserveAspectRatio="none"
+           role="img" aria-label="Curva de capital"></svg>
+      <div class="leyenda">
+        <span><i class="linea estrategia"></i> estrategia</span>
+        <span><i class="linea referencia"></i> comprar y mantener</span>
+      </div>
+    </div>
+    <div id="avisos"></div>
+    <details id="detalle-operaciones">
+      <summary>Operaciones</summary>
+      <div class="tabla-envoltura"><table id="tabla-operaciones"></table></div>
+    </details>
+  </section>
+
+  <section class="panel" id="panel-montecarlo" hidden>
+    <h2>Probabilidad real de duplicar el capital</h2>
+    <p class="explicacion">
+      Se reordenan al azar miles de veces los resultados de las operaciones de la estrategia.
+      Cada camino es tan verosímil como el que realmente ocurrió; el conjunto dice qué se
+      puede esperar y con qué probabilidad.
+    </p>
+    <div class="tarjetas" id="tarjetas-mc"></div>
+    <div id="barra-probabilidad"></div>
+    <p class="lectura" id="lectura-mc"></p>
+  </section>
+
+  <section class="panel" id="panel-optimizar" hidden>
+    <h2>Optimización con validación fuera de muestra</h2>
+    <p class="explicacion">
+      Los parámetros se buscan en el primer 70 % del histórico y se juzgan en el 30 % restante,
+      que la búsqueda no ha visto. Si el resultado se hunde fuera de muestra, la estrategia está
+      sobreajustada.
+    </p>
+    <div class="tabla-envoltura"><table id="tabla-optimizacion"></table></div>
+    <pre class="diagnostico" id="diagnostico"></pre>
+  </section>
+
+  <section class="panel" id="panel-bot">
+    <h2>Bot automático (papel)</h2>
+    <p class="explicacion">
+      El bot ejecuta un ciclo de decisión por sesión: revisa stops, pide señal a la estrategia y
+      manda las órdenes al bróker simulado. Su estado se guarda en disco, así que puede lanzarse
+      una vez al día desde <code>cron</code>.
+    </p>
+    <div class="botonera">
+      <button id="btn-ciclo" class="primario">Ejecutar ciclo</button>
+      <button id="btn-estado">Actualizar estado</button>
+      <button id="btn-reiniciar" class="peligro">Reiniciar cartera</button>
+    </div>
+    <div class="tarjetas" id="tarjetas-bot"></div>
+    <div class="dos-columnas">
+      <div>
+        <h3>Posiciones abiertas</h3>
+        <div class="tabla-envoltura"><table id="tabla-posiciones"></table></div>
+      </div>
+      <div>
+        <h3>Diario de decisiones</h3>
+        <ul id="diario"></ul>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <p>Plataforma de inversión automática · modo papel · <span id="version"></span></p>
+</footer>
+<script src="/app.js"></script>
+</body>
+</html>
