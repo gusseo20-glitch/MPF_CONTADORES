@@ -11,6 +11,16 @@ function Refrescar-Path {
 
 function Hay($nombre) { [bool](Get-Command $nombre -ErrorAction SilentlyContinue) }
 
+function PythonReal {
+  # Devuelve el Python de verdad. Windows incluye un python.exe FALSO en
+  # WindowsApps que solo abre la Microsoft Store: hay que ignorarlo.
+  foreach ($nombre in @("py", "python", "python3")) {
+    $cmd = Get-Command $nombre -ErrorAction SilentlyContinue
+    if ($cmd -and $cmd.Source -notmatch "WindowsApps") { return $nombre }
+  }
+  return $null
+}
+
 Write-Host ""
 Write-Host "=== Plataforma de inversion: instalacion automatica ===" -ForegroundColor Cyan
 Write-Host ""
@@ -32,8 +42,8 @@ if (-not (Hay "git")) {
   Write-Host "[1/4] Git ya esta instalado."
 }
 
-if (-not (Hay "py") -and -not (Hay "python")) {
-  Write-Host "[2/4] Instalando Python..."
+if (-not (PythonReal)) {
+  Write-Host "[2/4] Instalando Python (el python.exe de Microsoft Store no cuenta)..."
   winget install -e --id Python.Python.3.12 --accept-source-agreements --accept-package-agreements
   Refrescar-Path
 } else {
@@ -53,10 +63,16 @@ if (Test-Path (Join-Path $destino "plataforma")) {
 }
 
 Set-Location (Join-Path $destino "plataforma")
-$py = if (Hay "py") { "py" } else { "python" }
+$py = PythonReal
+if (-not $py) {
+  Write-Host "Python se ha instalado pero esta ventana aun no lo ve." -ForegroundColor Yellow
+  Write-Host "Cierra esta ventana y vuelve a hacer doble clic en instalar_todo.bat."
+  Read-Host "Pulsa Enter para salir"
+  exit 1
+}
 
 Write-Host "[4/4] Comprobando la instalacion (unos segundos)..."
-& $py -m unittest discover -s tests -t . *> $null
+cmd /c "$py -m unittest discover -s tests -t . 2>&1" | Out-Null
 if ($LASTEXITCODE -ne 0) {
   Write-Host "Las pruebas fallaron. Ejecuta esto en esta misma ventana para ver el detalle:" -ForegroundColor Yellow
   Write-Host "  $py -m unittest discover -s tests -t ."
