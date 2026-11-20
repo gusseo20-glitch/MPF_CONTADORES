@@ -1,0 +1,17 @@
+{
+  "name": "pasarela-myq-redsys",
+  "version": "0.1.0",
+  "description": "Recarga de crédito MyQ X con pago por TPV virtual Redsys",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=20.6" },
+  "scripts": {
+    "start": "node --env-file-if-exists=.env src/index.js",
+    "migrate": "node --env-file-if-exists=.env src/migrate.js",
+    "test": "node --test --test-concurrency=1 \"test/*.test.js\""
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "pg": "^8.13.1"
+  }
+}
